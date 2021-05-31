@@ -55,6 +55,19 @@
     <button>Trigger a Global Error</button>
   </section>
 
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "558d5fd1fd7e454db6030fe0bc1ad451"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+
+    window.onerror = (function () {
+      console.log('window global error');
+    });
+    TrackJS.track('Testing TrackJS!');                    
+  </script>
+ 
   <script>
     let calculateBtn = document.querySelector('#calculate');
     calculateBtn.addEventListener('click', () => {
@@ -63,10 +76,107 @@
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
       output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+  
+
+      //error for calculate
+      class calcError extends Error {
+        constructor(message) {
+          super(message);
+          this.name = "calc Error";
+        }
+      }
+      // try and catch
+      try {
+        if(firstNum == '') {
+          throw new calcError("no input for first number");
+        }
+        if (secondNum == '') {
+          throw new calcError('no Input for second number');
+        }
+      }
+      catch(err) {
+        console.error(err);
+        console.error("input error");
+
+      }
+
     });
 
+    
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
     // TODO - Make buttons functional
+
+    // Console Log Demo 
+    errorBtns[0].addEventListener( 'click', () => {
+      console.log('from Console log ');
+    });
+
+    // Console Error Demo f
+    errorBtns[1].addEventListener('click', () => {
+      console.error('from Console error');
+    })
+
+    // Console Dir
+    errorBtns[2].addEventListener('click', () => {
+      console.dir('dir error');
+    });
+
+    // Console Dirxml
+    errorBtns[3].addEventListener('click', () => {
+      //console.dirxml(document);
+      console.dirxml('Dirxml errors');
+    });
+
+    // Console Group 
+    const groupMessage= 'console group';
+    errorBtns[4].addEventListener('click', () => {
+      console.group(groupMessage);
+      console.info('Group');
+    });
+
+    // end of Console Group 
+    errorBtns[5].addEventListener('click', () => {
+      console.groupEnd(groupMessage);
+    }); 
+
+    // Console Table
+    errorBtns[6].addEventListener('click', () => {
+      let message = ['please', 'help', 'me', 'God'];
+
+      console.table(message);
+    });
+
+    //imer
+    errorBtns[7].addEventListener('click', () => {
+    console.time();
+    console.log('Timer start');
+    });
+
+    // End Timer
+    errorBtns[8].addEventListener('click', () => {
+      console.timeEnd();
+      console.log('Timer end');
+    });
+
+    //Console Trace
+    errorBtns[9].addEventListener('click', () => {
+      console.trace();
+    });
+  
+    //global error
+    errorBtns[10].addEventListener('click', () => {
+      try {
+        console.log('in try');
+        fuckyoucarmen();
+      }
+      catch (error) {
+        console.error('in catch');
+      }
+      finally {
+        console.log('in finally')
+      }
+    });
   </script>
+
 </body>
 </html>
